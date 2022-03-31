@@ -2,6 +2,7 @@ package ru.learnup.operasales.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.learnup.operasales.annotations.EmailNotified;
 import ru.learnup.operasales.model.AgeCategory;
 import ru.learnup.operasales.model.Premiere;
 import ru.learnup.operasales.repositary.PlayBill;
@@ -25,6 +26,7 @@ public class PlayBillService {
         return null;
     }
 
+    @EmailNotified
     public void addPremiere(Premiere premiere) {
         if (getPremiereByName(premiere.getName()) != null) {
             throw new RuntimeException("Премьера '" + premiere.getName() + "' уже добавлена в афишу");
@@ -44,6 +46,7 @@ public class PlayBillService {
         }
     }
 
+    @EmailNotified
     public void removePremiere(String namePremiere) {
         Premiere premiere = getPremiereByName(namePremiere);
         if (premiere != null) {
@@ -61,6 +64,7 @@ public class PlayBillService {
         }
     }
 
+    @EmailNotified
     public void buyTickets(String namePremiere, int numberOfTickets) {
         Premiere premiere = getPremiereByName(namePremiere);
         if (premiere != null) {
