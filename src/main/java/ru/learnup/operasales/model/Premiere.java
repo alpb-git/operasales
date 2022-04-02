@@ -1,12 +1,33 @@
 package ru.learnup.operasales.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "PLAYBILL")
 public class Premiere {
 
-    private final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "SEQ_PLAYBILL", sequenceName = "SEQ_PLAYBILL")
+    private Long id;
+
+    @Column(name = "NAME", length=255)
+    private String name;
+
+    @Column(name = "DESCRIPTION", length=2000)
     private String description;
+
+    @Column(name = "AGE_CATEGORY", length=30)
     private AgeCategory ageCategory;
-    private final int numberOfSeats;
+
+    @Column(name = "SEATS")
+    private int numberOfSeats;
+
+    @Column(name = "SEATS_SOLD")
     private int numberOfSeatsSold;
+
+    protected Premiere() {
+    }
 
     public Premiere(String name, String description, AgeCategory ageCategory, int numberOfSeats) {
         this.name = name;
@@ -19,16 +40,8 @@ public class Premiere {
         return name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public AgeCategory getAgeCategory() {
-        return ageCategory;
     }
 
     public void setAgeCategory(AgeCategory ageCategory) {

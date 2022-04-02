@@ -1,0 +1,24 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:db
+    username: sa
+    password:
+
+  flyway:
+    enabled: true
+    clean-disabled: true
+    baseline-on-migrate: true
+
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: false
+    show-sql: off
+    open-in-view: off
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
