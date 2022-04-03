@@ -7,6 +7,7 @@ import ru.learnup.operasales.model.AgeCategory;
 import ru.learnup.operasales.model.Premiere;
 import ru.learnup.operasales.repository.PremiereRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,16 +21,19 @@ public class PremiereService {
         this.premiereRepository = premiereRepository;
     }
 
-    @EmailNotified
+    @Transactional
     public void addPremiere(Premiere premiere) {
-        if (premiereRepository.findPremiereByName(premiere.getName()) != null) {
-            throw new RuntimeException("Премьера '" + premiere.getName() + "' уже добавлена в афишу");
+        if (premiereRepository.getPremiereByName(premiere.getName()) != null) {
+            System.out.println("Премьера '" + premiere.getName() + "' УЖЕ добавлена в афишу");
+            return;
         }
         premiereRepository.save(premiere);
+        System.out.println("Премьера '" + premiere.getName() + "' успешно добавлена в афишу");
     }
 
+    @Transactional
     public void editPremiere(String namePremiere, String description, AgeCategory ageCategory) {
-        Premiere premiere = premiereRepository.findPremiereByName(namePremiere);
+        Premiere premiere = premiereRepository.getPremiereByName(namePremiere);
         if (premiere != null) {
             if (description != null) {
                 premiere.setDescription(description);
@@ -41,12 +45,15 @@ public class PremiereService {
         }
     }
 
-    @EmailNotified
+    @Transactional
     public void removePremiere(String namePremiere) {
-        Premiere premiere = premiereRepository.findPremiereByName(namePremiere);
-        if (premiere != null) {
-            premiereRepository.delete(premiere);
+        Premiere premiere = premiereRepository.getPremiereByName(namePremiere);
+        if (premiere == null) {
+            System.out.println("Премьера '" + namePremiere + "' НЕ найдена в афише");
+            return;
         }
+        premiereRepository.delete(premiere);
+        System.out.println("Премьера '" + premiere.getName() + "' успешно удалена из афишы");
     }
 
     public void printAll() {
@@ -67,8 +74,9 @@ public class PremiereService {
     }
 
     @EmailNotified
+    @Transactional
     public void buyTickets(String namePremiere, int numberOfTickets) {
-        Premiere premiere = premiereRepository.findPremiereByName(namePremiere);
+        Premiere premiere = premiereRepository.getPremiereByName(namePremiere);
         if (premiere != null) {
             int numberOfSeatsFree = premiere.getNumberOfSeats() - premiere.getNumberOfSeatsSold();
             if (numberOfSeatsFree < numberOfTickets) {
@@ -79,8 +87,9 @@ public class PremiereService {
         }
     }
 
+    @Transactional
     public void returnTickets(String namePremiere, int numberOfTickets) {
-        Premiere premiere = premiereRepository.findPremiereByName(namePremiere);
+        Premiere premiere = premiereRepository.getPremiereByName(namePremiere);
         if (premiere != null) {
             int numberOfSeatsSold = premiere.getNumberOfSeatsSold();
             if (numberOfSeatsSold < numberOfTickets) {
