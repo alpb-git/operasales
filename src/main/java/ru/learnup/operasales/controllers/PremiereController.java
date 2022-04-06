@@ -27,7 +27,7 @@ public class PremiereController {
         this.premiereMapper = premiereMapper;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody PremiereDto premiereDto) {
         String result = premiereService.addPremiere(premiereMapper.toEntity(premiereDto));
         return result == null
@@ -35,7 +35,7 @@ public class PremiereController {
                 : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @GetMapping
+    @GetMapping("/get")
     public ResponseEntity<Collection<PremiereDto>> read() {
         List<Premiere> premieres = premiereService.findAll();
         return !premieres.isEmpty()
@@ -45,7 +45,7 @@ public class PremiereController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<PremiereDto> read(@PathVariable("id") Long id) {
         Premiere premiere = premiereService.findById(id);
         return premiere != null
@@ -53,7 +53,7 @@ public class PremiereController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody PremiereDto premiereDto) {
         Premiere premiere = premiereMapper.toEntity(premiereDto);
         return premiereService.editPremiere(id, premiere.getDescription(), premiere.getAgeCategory()) == null
@@ -61,7 +61,7 @@ public class PremiereController {
                 : new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         String result = premiereService.removePremiere(id);
         return result == null
